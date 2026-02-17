@@ -5,7 +5,7 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: { port: 3000 },
-  base: "/blitz-the-gap-map/",
+  base: "/blitz-the-gap-bc-parks-map/",
   sourcemap: false,
   build: {
     chunkSizeWarningLimit: 100,
