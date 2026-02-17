@@ -6,8 +6,6 @@ import { Protocol } from "pmtiles";
 import _, { every } from "lodash";
 import { amfhot, haline, ocean, custom } from "./colormaps";
 import Popup from "./Popup";
-import counties_challenges from "./counties_challenges.json";
-import counties_species from "./counties_species.json";
 import { MapLibreStyleSwitcherControl } from "./styleswitcher";
 import { baseLayers } from "./mapStyle";
 import "./map.css";
@@ -36,20 +34,12 @@ export default function Map(props) {
     };
   }, []);
 
-  const color_challenges = (value) => {
-    if (value < 1) return "#fff0";
-    if (value < 100) return "#6ee4f9";
-    if (value < 400) return "#34aac0";
-    if (value < 600) return "#1a879c";
-    return "#177182";
-  };
-
-  const chalpal = (chal, colorBy) => {
-    if (true) {
+  const chalpal = (colorBy) => {
+    if (colorBy==='obsdens'){
       return [
         "interpolate",
         ["linear"],
-        ["to-number", ["get", "n_obs"]],
+        ["to-number", ["get", colorBy]],
         10,
         "#22301a",
         50,
@@ -57,9 +47,26 @@ export default function Map(props) {
         100,
         "#54793e",
         500,
-        "#638b4c",
-        1000,
         "#98cd79",
+        2500,
+        "#cce7bd",
+      ];
+    }
+    else{
+      return [
+        "interpolate",
+        ["linear"],
+        ["to-number", ["get", colorBy]],
+        5,
+        "#22301a",
+        10,
+        "rgb(52, 66, 110)",
+        50,
+        "#5a6eae",
+        200,
+        "#5aa6ed",
+        500,
+        "#b5d1eb",
       ];
     }
   };
@@ -99,6 +106,26 @@ export default function Map(props) {
               type: "vector",
               url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/alltaxa-hex.pmtiles",
             },
+            hex_100km: {
+              type: "vector",
+              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/all_100km.pmtiles"
+            },
+            hex_50km: {
+              type: "vector",
+              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/all_50km.pmtiles"
+            },
+            hex_25km: {
+              type: "vector",
+              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/all_25km.pmtiles"
+            },
+            hex_10km: {
+              type: "vector",
+              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/all_10km.pmtiles"
+            },
+            hex_5km: {
+              type: "vector",
+              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/all_5km.pmtiles"
+            },
             background: {
               type: "raster",
               tiles: [
@@ -115,52 +142,52 @@ export default function Map(props) {
               source: "background",
             },
             {
-              id: "alltaxa-obsdens-5km",
+              id: "hex_5km",
               type: "fill",
-              "source-layer": "alltaxa-obsdens-5km",
-              source: "counties",
+              "source-layer": "all_5km",
+              source: "hex_5km",
               paint: {
                 "fill-color": chalpal(challenge, colorBy),
                 "fill-opacity": 0.4,
-                "fill-outline-color": "#ffffffaa",
-              },
-              minzoom: 8,
-            },
-            {
-              id: "alltaxa-obsdens-10km",
-              type: "fill",
-              "source-layer": "alltaxa-obsdens-10km",
-              source: "counties",
-              paint: {
-                "fill-color": chalpal(challenge, colorBy),
-                "fill-opacity": 0.4,
-                "fill-outline-color": "#ffffffaa",
+                "fill-outline-color": "#ffffff22",
               },
               minzoom: 6,
-              maxzoom: 8,
             },
             {
-              id: "alltaxa-obsdens-25km",
+              id: "hex_10km",
               type: "fill",
-              "source-layer": "alltaxa-obsdens-25km",
-              source: "counties",
+              "source-layer": "all_10km",
+              source: "hex_10km",
               paint: {
-                "fill-color": chalpal(challenge, colorBy),
+                "fill-color": chalpal(colorBy),
                 "fill-opacity": 0.4,
-                "fill-outline-color": "#ffffffaa",
+                "fill-outline-color": "#ffffff11",
               },
-              minzoom: 3,
+              minzoom: 5,
               maxzoom: 6,
             },
             {
-              id: "alltaxa-obsdens-100km",
+              id: "hex_25km",
               type: "fill",
-              "source-layer": "alltaxa-obsdens-100km",
-              source: "counties",
+              "source-layer": "all_25km",
+              source: "hex_25km",
               paint: {
-                "fill-color": chalpal(challenge, colorBy),
+                "fill-color": chalpal(colorBy),
                 "fill-opacity": 0.4,
-                "fill-outline-color": "#ffffffaa",
+                "fill-outline-color": "#ffffff11",
+              },
+              minzoom: 3,
+              maxzoom: 5,
+            },
+            {
+              id: "hex_50km",
+              type: "fill",
+              "source-layer": "all_50km",
+              source: "hex_50km",
+              paint: {
+                "fill-color": chalpal(colorBy),
+                "fill-opacity": 0.4,
+                "fill-outline-color": "#ffffff11",
               },
               maxzoom: 3,
               minzoom: 0,
@@ -239,12 +266,28 @@ export default function Map(props) {
 
   useEffect(() => {
     if (mapp) {
-      /*mapp.setPaintProperty(
-        "counties",
+      mapp.setPaintProperty(
+        "hex_5km",
         "fill-color",
-        chalpal(challenge, colorBy)
+        chalpal(colorBy)
       );
-      mapp.triggerRepaint();*/
+      mapp.setPaintProperty(
+        "hex_10km",
+        "fill-color",
+        chalpal(colorBy)
+      );
+      mapp.setPaintProperty(
+        "hex_25km",
+        "fill-color",
+        chalpal(colorBy)
+      );
+      mapp.setPaintProperty(
+        "hex_50km",
+        "fill-color",
+        chalpal(colorBy)
+      );
+
+      mapp.triggerRepaint();
     }
     return () => {};
   }, [mapp, challenge, colorBy]);

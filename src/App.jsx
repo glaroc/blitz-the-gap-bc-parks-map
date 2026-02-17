@@ -12,7 +12,7 @@ function App() {
     "https://object-arbutus.cloud.computecanada.ca/bq-io/io/inat_canada_heatmaps/All_density_inat_100m.tif"
   );
   const [challenge, setChallenge] = useState("All challenges");
-  const [colorBy, setColorBy] = useState("challenges");
+  const [colorBy, setColorBy] = useState("obsdens");
   const challenges = [
     { name: "All challenges", everywhere: false },
     { name: "Conservation priorities (MayBAs)", everywhere: false },

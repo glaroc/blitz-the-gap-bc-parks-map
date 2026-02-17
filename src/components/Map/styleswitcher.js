@@ -33,64 +33,77 @@ export class MapLibreStyleSwitcherControl {
         if (srcElement.classList.contains("active")) {
           return;
         }
-        if (style.title === "Counties") {
-          this.map.setLayoutProperty("counties", "visibility", "visible");
-        } else {
-          this.map.setLayoutProperty("counties", "visibility", "none");
-        }
-        this.map.setLayoutProperty("richness_all", "visibility", "none");
-        this.map.setLayoutProperty("richness_plants", "visibility", "none");
-        this.map.setLayoutProperty(
-          "richness_vertebrates",
-          "visibility",
-          "none"
-        );
-        this.map.setLayoutProperty(
-          "richness_butterflies",
-          "visibility",
-          "none"
-        );
-        const orderedLayerIds = map.getLayersOrder();
-        orderedLayerIds.forEach((layerId) => {
-          if (layerId.includes("ol-")) {
-            this.map.removeLayer(layerId);
+        const currentLayers =
+          (this.map && this.map.getStyle && this.map.getStyle().layers) || [];
+        currentLayers.forEach((layer) => {
+          if (layer && layer.id && layer.id.includes("ol-")) {
+            if (this.map.getLayer(layer.id)) {
+              this.map.removeLayer(layer.id);
+            }
           }
         });
-        if (style.title === "Richness of all species") {
-          this.map.setLayoutProperty("richness_all", "visibility", "visible");
-        }
-        if (style.title === "Plant richness") {
-          this.map.setLayoutProperty(
-            "richness_plants",
-            "visibility",
-            "visible"
-          );
-        }
-        if (style.title === "Vertebrate richness") {
-          this.map.setLayoutProperty(
-            "richness_vertebrates",
-            "visibility",
-            "visible"
-          );
-        }
-        if (style.title === "Butterfly richness") {
-          this.map.setLayoutProperty(
-            "richness_butterflies",
-            "visibility",
-            "visible"
-          );
-        }
         this.map.triggerRepaint();
         if (style.uri !== "") {
           fetch(JSON.parse(srcElement.dataset.uri))
             .then((res) => res.json())
             .then((sty) => {
-              sty = sty.layers.map((layer) => {
-                layer.id = "ol-" + layer.id;
-                map.addLayer(layer, "counties");
-              });
+              // add any sources from the style first
+              if (sty.sources) {
+                Object.entries(sty.sources).forEach(([sourceId, sourceDef]) => {
+                  try {
+                    if (!this.map.getSource(sourceId)) {
+                      this.map.addSource(sourceId, sourceDef);
+                    }
+                  } catch (err) {
+                    console.error("Failed to add source", sourceId, err);
+                  }
+                });
+              }
+
+              // add layers (prefix ids to avoid collisions).
+              // Insert new layers below our overlay hex layers so they don't cover data overlays.
+              if (sty.layers && Array.isArray(sty.layers)) {
+                const existingLayers = (this.map.getStyle && this.map.getStyle().layers) || [];
+                const existingIds = existingLayers.map((l) => l.id);
+                const overlayCandidates = [
+                  "hex_5km",
+                  "hex_10km",
+                  "hex_25km",
+                  "hex_50km",
+                  "hex_100km",
+                  "counties",
+                ];
+                // find first overlay layer that exists in the current style
+                const beforeOverlay = overlayCandidates.find((id) => existingIds.includes(id));
+                // if none found, insert before the first existing layer (bottom)
+                const bottomLayerId = existingIds.length ? existingIds[0] : null;
+
+                sty.layers.forEach((layer) => {
+                  if (!layer || !layer.id) return;
+                  const newLayer = Object.assign({}, layer, { id: "ol-" + layer.id });
+                  try {
+                    if (this.map.getLayer(newLayer.id)) {
+                      this.map.removeLayer(newLayer.id);
+                    }
+                    const insertBefore = beforeOverlay || bottomLayerId;
+                    if (insertBefore && this.map.getLayer(insertBefore)) {
+                      this.map.addLayer(newLayer, insertBefore);
+                    } else {
+                      // fallback: add to bottom by inserting before first layer id if available
+                      if (bottomLayerId && this.map.getLayer(bottomLayerId)) {
+                        this.map.addLayer(newLayer, bottomLayerId);
+                      } else {
+                        this.map.addLayer(newLayer);
+                      }
+                    }
+                  } catch (err) {
+                    console.error("Failed to add layer", newLayer.id, err);
+                  }
+                });
+              }
               this.map.triggerRepaint();
-            });
+            })
+            .catch((err) => console.error("Error loading style", err));
         }
         this.mapStyleContainer.style.display = "none";
         this.styleButton.style.display = "block";

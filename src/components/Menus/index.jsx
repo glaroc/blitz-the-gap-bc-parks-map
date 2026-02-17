@@ -69,12 +69,12 @@ export default function Menus(props) {
             }}
           >
             <FormControlLabel
-              value="observations"
+              value="obsdens"
               control={<Radio />}
               label="Number of observations"
             />
             <FormControlLabel
-              value="species"
+              value="spdens"
               control={<Radio />}
               label="Number of species"
             />
