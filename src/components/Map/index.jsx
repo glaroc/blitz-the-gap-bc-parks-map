@@ -20,9 +20,6 @@ export default function Map(props) {
   //const colormap = encodeURIComponent(JSON.stringify(amfhot));
   const colormap = "viridis";
 
-  const everywhere_challenges = challenges
-    .filter((c) => c.everywhere === true)
-    .map((c) => c.name);
 
   useEffect(() => {
     let ignore = true;
@@ -60,7 +57,7 @@ export default function Map(props) {
         5,
         "#22301a",
         10,
-        "rgb(52, 66, 110)",
+        "#34426e",
         50,
         "#5a6eae",
         200,
@@ -234,14 +231,16 @@ export default function Map(props) {
           showCompass: false,
         })
       );
-      map.on("click", "counties", (e) => {
+      map.on("click", (e) => {
+        const features = map.queryRenderedFeatures(e.point);
         const container = document.createElement("div");
 
         ReactDOM.createRoot(container).render(
-          <Popup
-            feature={e.features[0].properties}
-            everywhere_challenges={everywhere_challenges}
-          />
+          <div style={{ textAlign: "center", fontSize: "16px" }}>
+          <>
+            Number of observations<br/><div style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px", color: "#3f5830"}}> {features[0].properties.obsdens}</div></>
+          <>Number of species: <div style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px", color: "#34426e"}}>{features[0].properties.spdens?features[0].properties.spdens:"0"}</div></>
+          </div>
         );
 
         new maplibregl.Popup()
@@ -300,7 +299,7 @@ export default function Map(props) {
         width: "100vw",
         height: "100vh",
         zIndex: "0",
-        background: "url('/blitz-the-gap-map/night-sky.png')",
+        background: "url('/blitz-the-gap-bc-parks-map/night-sky.png')",
       }}
     ></div>
   );

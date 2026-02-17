@@ -50,7 +50,7 @@ export default function Menus(props) {
         style={{
           width: "300px",
           height: "200px",
-          background: "url('/blitz-the-gap-map/logo.png') no-repeat",
+          background: "url('/blitz-the-gap-bc-parks-map/logo.png') no-repeat",
           marginBottom: "10px",
           backgroundPosition: "center center",
           backgroundSize: "contain",
