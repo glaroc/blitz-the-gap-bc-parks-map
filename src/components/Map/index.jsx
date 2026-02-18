@@ -3,9 +3,10 @@ import ReactDOM from "react-dom/client";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Protocol } from "pmtiles";
-import _, { every } from "lodash";
+import _, { every, set } from "lodash";
 import { amfhot, haline, ocean, custom } from "./colormaps";
 import Popup from "./Popup";
+import BaseLegend from "./BaseLegend";
 import { MapLibreStyleSwitcherControl } from "./styleswitcher";
 import { baseLayers } from "./mapStyle";
 import "./map.css";
@@ -14,9 +15,10 @@ export default function Map(props) {
   const { COGUrl, opacity, challenges, challenge, colorBy } = props;
 
   const [mapp, setMapp] = useState(null);
-
+  const greenpal = [{value:10, color:"#22301a"}, {value:50, color:"#3f5830"}, {value:100, color:"#54793e"}, {value:500, color:"#98cd79"}, {value:2500, color:"#cce7bd"}]
+  const bluepal = [{value:5, color:"#22301a"}, {value:10, color:"#34426e"}, {value:50, color:"#5a6eae"}, {value:200, color:"#5aa6ed"}, {value:500, color:"#b5d1eb"}]
   const mapRef = useRef();
-
+  const [valueColors, setValueColors] = useState(greenpal)
   //const colormap = encodeURIComponent(JSON.stringify(amfhot));
   const colormap = "viridis";
 
@@ -33,37 +35,39 @@ export default function Map(props) {
 
   const chalpal = (colorBy) => {
     if (colorBy==='obsdens'){
+        setValueColors(greenpal)
       return [
         "interpolate",
         ["linear"],
         ["to-number", ["get", colorBy]],
-        10,
-        "#22301a",
-        50,
-        "#3f5830",
-        100,
-        "#54793e",
-        500,
-        "#98cd79",
-        2500,
-        "#cce7bd",
+        greenpal[0].value,
+        greenpal[0].color,
+        greenpal[1].value,
+        greenpal[1].color,
+        greenpal[2].value,
+        greenpal[2].color,
+        greenpal[3].value,
+        greenpal[3].color,
+        greenpal[4].value,
+        greenpal[4].color,
       ];
     }
     else{
+      setValueColors(bluepal)
       return [
         "interpolate",
         ["linear"],
         ["to-number", ["get", colorBy]],
-        5,
-        "#22301a",
-        10,
-        "#34426e",
-        50,
-        "#5a6eae",
-        200,
-        "#5aa6ed",
-        500,
-        "#b5d1eb",
+        bluepal[0].value,
+        bluepal[0].color,
+        bluepal[1].value,
+        bluepal[1].color,
+        bluepal[2].value,
+        bluepal[2].color,
+        bluepal[3].value,
+        bluepal[3].color,
+        bluepal[4].value,
+        bluepal[4].color,
       ];
     }
   };
@@ -217,7 +221,7 @@ export default function Map(props) {
             .then((res) => res.json())
             .then((sty) => {
               Object.entries(sty.sources).forEach(([sourceId, sourceDef]) => {
-                if (!map.getSource(sourceId)) {
+                if (map && !map.getSource(sourceId)) {
                   map.addSource(sourceId, sourceDef);
                 }
               });
@@ -238,8 +242,11 @@ export default function Map(props) {
         ReactDOM.createRoot(container).render(
           <div style={{ textAlign: "center", fontSize: "16px" }}>
           <>
-            Number of observations<br/><div style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px", color: "#3f5830"}}> {features[0].properties.obsdens}</div></>
-          <>Number of species: <div style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px", color: "#34426e"}}>{features[0].properties.spdens?features[0].properties.spdens:"0"}</div></>
+            Number of observations<br/><div style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px", color: "#3f5830"}}> {features[0].properties.obsdens}</div>
+          </>
+          <>
+            Number of species<br/><div style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px", color: "#34426e"}}>{features[0].properties.spdens?features[0].properties.spdens:"0"}</div>
+          </>
           </div>
         );
 
@@ -291,6 +298,28 @@ export default function Map(props) {
     return () => {};
   }, [mapp, challenge, colorBy]);
 
+  // determine legend params based on colorBy
+  const legendParams = (() => {
+    if (colorBy === "obsdens") {
+      return {
+        min: 10,
+        max: 2500,
+        colors: ["#22301a", "#3f5830", "#54793e", "#98cd79", "#cce7bd"],
+      };
+    }
+    return {
+      min: 5,
+      max: 500,
+      colors: [
+        "#22301a",
+        "#34426e",
+        "#5a6eae",
+        "#5aa6ed",
+        "#b5d1eb",
+      ],
+    };
+  })();
+
   return (
     <div
       id="App"
@@ -300,7 +329,24 @@ export default function Map(props) {
         height: "100vh",
         zIndex: "0",
         background: "url('/blitz-the-gap-bc-parks-map/night-sky.png')",
+        position: "relative",
       }}
-    ></div>
+    >
+      <div
+        style={{
+          position: "absolute",
+          bottom: 40,
+          right: 20,
+          zIndex: 2000,
+          pointerEvents: "auto",
+          backgroundColor: "white",
+          padding: "10px",
+          width: 75,
+          borderRadius: 5,
+        }}
+      >
+        {BaseLegend(valueColors)}
+      </div>
+    </div>
   );
 }

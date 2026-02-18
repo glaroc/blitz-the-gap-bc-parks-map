@@ -1,0 +1,33 @@
+
+.legend-group{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+.legend{
+    background-color: white;
+    padding: 6px;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.legendItem{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.legendItemText{
+    font-size: 12px;
+}
+
+.legendItemColorBox{
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    display: inline-block;
+}

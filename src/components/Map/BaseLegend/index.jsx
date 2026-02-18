@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import ReactDOMServer from "react-dom/server";
+import "./style.css";
 
 function LegendItem(props) {
   const { color = "red", text = "" } = props;
@@ -23,26 +24,10 @@ export function Legend(items) {
   );
 }
 
-/**
- * Factory method
- * @param {Number} min bottom of range
- * @param {Number} max top of range
- * @param {Color[]} scaleColors array of colors
- * @returns a leaflet control object
- */
-export default function RangeLegend(min, max, scaleColors) {
-  const step = (max - min) / (scaleColors.length - 1);
-  const roundFactor = max <= 10 ? 100 : 1;
-
-  const items = scaleColors.map((color, i) => {
-    return {
-      color: color,
-      text: Math.round(roundFactor * (min + i * step)) / roundFactor,
-    };
-  });
+export default function BaseLegend(valueColors) {
   return (
     <div className="legend-group">
-      <Legend items={items} />
+      <Legend items={valueColors} />
     </div>
   );
 }
