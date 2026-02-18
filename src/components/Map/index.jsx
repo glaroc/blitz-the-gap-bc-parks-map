@@ -215,18 +215,20 @@ export default function Map(props) {
           },
         },
       });
-      baseLayers.forEach((source) => {
-        if (source.uri !== "") {
-          fetch(source.uri)
-            .then((res) => res.json())
-            .then((sty) => {
-              Object.entries(sty.sources).forEach(([sourceId, sourceDef]) => {
-                if (map && !map.getSource(sourceId)) {
-                  map.addSource(sourceId, sourceDef);
-                }
+      map.once('load', () => {
+        baseLayers.forEach((source) => {
+          if (source.uri !== "") {
+            fetch(source.uri)
+              .then((res) => res.json())
+              .then((sty) => {
+                Object.entries(sty.sources).forEach(([sourceId, sourceDef]) => {
+                  if (map && !map.getSource(sourceId)) {
+                    map.addSource(sourceId, sourceDef);
+                  }
+                });
               });
-            });
-        }
+          }
+        });
       });
       map.addControl(new maplibregl.GlobeControl());
       map.addControl(
