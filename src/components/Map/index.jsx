@@ -5,7 +5,6 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { Protocol } from "pmtiles";
 import _, { every, set } from "lodash";
 import { amfhot, haline, ocean, custom } from "./colormaps";
-import Popup from "./Popup";
 import BaseLegend from "./BaseLegend";
 import { MapLibreStyleSwitcherControl } from "./styleswitcher";
 import { baseLayers } from "./mapStyle";

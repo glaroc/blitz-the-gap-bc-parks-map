@@ -11,7 +11,6 @@ import FormLabel from "@mui/material/FormLabel";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Button from "@mui/material/Button";
-import RangeLegend from "../Map/RangeLegend";
 
 export default function Menus(props) {
   const { challenges, setChallenge, challenge, setColorBy } = props;
