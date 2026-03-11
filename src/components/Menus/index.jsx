@@ -14,15 +14,21 @@ import Button from "@mui/material/Button";
 import RangeLegend from "../Map/RangeLegend";
 
 export default function Menus(props) {
-  const { challenges, setChallenge, challenge, colorBy, setColorBy } = props;
+  const { challenges, setChallenge, challenge, setColorBy } = props;
   const [challengeList, setChallengeList] = React.useState([]);
   const [collapsed, setCollapsed] = React.useState(false);
+  const [species, setSpecies] = React.useState("total");
+  const [obsRich, setObsRich] = React.useState("OBS");
 
   useEffect(() => {
     setChallengeList(
-      challenges.map((c) => <MenuItem value={c.name}>{c.name}</MenuItem>)
+      challenges.map((c) => <MenuItem value={c.name}>{c.name}</MenuItem>),
     );
   }, [challenges]);
+
+  useEffect(() => {
+    setColorBy(obsRich + "_" + species);
+  }, [species, obsRich]);
 
   return (
     <div
@@ -63,20 +69,57 @@ export default function Menus(props) {
             row
             aria-labelledby="row-radio-buttons-group-label"
             name="row-radio-buttons-group"
-            value={colorBy}
+            value={obsRich}
             onChange={(event) => {
-              setColorBy(event.target.value);
+              setObsRich(event.target.value);
             }}
           >
             <FormControlLabel
-              value="obsdens"
+              value="OBS"
               control={<Radio />}
               label="Number of observations"
             />
             <FormControlLabel
-              value="spdens"
+              value="SR"
               control={<Radio />}
               label="Number of species"
+            />
+          </RadioGroup>
+        </FormControl>
+      </FormControl>
+      <FormControl variant="standard" sx={{ m: 1, minWidth: 280 }}>
+        <FormControl sx={{ marginTop: "15px" }}>
+          <FormLabel id="row-radio-buttons-group-label">
+            For which species?
+          </FormLabel>
+          <RadioGroup
+            row
+            aria-labelledby="row-radio-buttons-group-label"
+            name="row-radio-buttons-group"
+            value={species}
+            onChange={(event) => {
+              setSpecies(event.target.value);
+            }}
+          >
+            <FormControlLabel
+              value="total"
+              control={<Radio />}
+              label="All species"
+            />
+            <FormControlLabel
+              value="sarN"
+              control={<Radio />}
+              label="Species at risk (national designation)"
+            />
+            <FormControlLabel
+              value="sarBC"
+              control={<Radio />}
+              label="Species at risk (BC designation)"
+            />
+            <FormControlLabel
+              value="invasive"
+              control={<Radio />}
+              label="Invasive species"
             />
           </RadioGroup>
         </FormControl>

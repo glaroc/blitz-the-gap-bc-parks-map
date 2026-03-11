@@ -15,13 +15,24 @@ export default function Map(props) {
   const { COGUrl, opacity, challenges, challenge, colorBy } = props;
 
   const [mapp, setMapp] = useState(null);
-  const greenpal = [{value:10, color:"#22301a"}, {value:50, color:"#3f5830"}, {value:100, color:"#54793e"}, {value:500, color:"#98cd79"}, {value:2500, color:"#cce7bd"}]
-  const bluepal = [{value:5, color:"#22301a"}, {value:10, color:"#34426e"}, {value:50, color:"#5a6eae"}, {value:200, color:"#5aa6ed"}, {value:500, color:"#b5d1eb"}]
+  const greenpal = [
+    { value: 10, color: "#22301a" },
+    { value: 50, color: "#3f5830" },
+    { value: 100, color: "#54793e" },
+    { value: 500, color: "#98cd79" },
+    { value: 2500, color: "#cce7bd" },
+  ];
+  const bluepal = [
+    { value: 5, color: "#22301a" },
+    { value: 10, color: "#34426e" },
+    { value: 50, color: "#5a6eae" },
+    { value: 200, color: "#5aa6ed" },
+    { value: 500, color: "#b5d1eb" },
+  ];
   const mapRef = useRef();
-  const [valueColors, setValueColors] = useState(greenpal)
+  const [valueColors, setValueColors] = useState(greenpal);
   //const colormap = encodeURIComponent(JSON.stringify(amfhot));
   const colormap = "viridis";
-
 
   useEffect(() => {
     let ignore = true;
@@ -34,8 +45,8 @@ export default function Map(props) {
   }, []);
 
   const chalpal = (colorBy) => {
-    if (colorBy==='obsdens'){
-        setValueColors(greenpal)
+    if (colorBy.includes("OBS")) {
+      setValueColors(greenpal);
       return [
         "interpolate",
         ["linear"],
@@ -51,9 +62,8 @@ export default function Map(props) {
         greenpal[4].value,
         greenpal[4].color,
       ];
-    }
-    else{
-      setValueColors(bluepal)
+    } else {
+      setValueColors(bluepal);
       return [
         "interpolate",
         ["linear"],
@@ -71,18 +81,6 @@ export default function Map(props) {
       ];
     }
   };
-
-  const pal = [
-    "interpolate",
-    ["case"],
-    ["get", "number_of_challenges"],
-    2,
-    "#ffffff",
-    4,
-    "#ffff00",
-    8,
-    "#ff0000",
-  ];
 
   useEffect(() => {
     if (COGUrl && !mapp) {
@@ -103,29 +101,25 @@ export default function Map(props) {
               ],
               tileSize: 256,
             },
-            counties: {
-              type: "vector",
-              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/alltaxa-hex.pmtiles",
-            },
             hex_100km: {
               type: "vector",
-              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/all_100km.pmtiles"
+              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/hex_bc_100km.pmtiles",
             },
             hex_50km: {
               type: "vector",
-              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/all_50km.pmtiles"
+              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/hex_bc_50km.pmtiles",
             },
             hex_25km: {
               type: "vector",
-              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/all_25km.pmtiles"
+              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/hex_bc_25km.pmtiles",
             },
             hex_10km: {
               type: "vector",
-              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/all_10km.pmtiles"
+              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/hex_bc_10km.pmtiles",
             },
             hex_5km: {
               type: "vector",
-              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/all_5km.pmtiles"
+              url: "pmtiles://https://object-arbutus.cloud.computecanada.ca/bq-io/blitz-the-gap/hex_bc_5km.pmtiles",
             },
             background: {
               type: "raster",
@@ -135,7 +129,6 @@ export default function Map(props) {
               tileSize: 256,
             },
           },
-          /*terrain: { source: "terrain", exaggeration: 0.025 },*/
           layers: [
             {
               id: "back",
@@ -145,50 +138,50 @@ export default function Map(props) {
             {
               id: "hex_5km",
               type: "fill",
-              "source-layer": "all_5km",
+              "source-layer": "5km",
               source: "hex_5km",
               paint: {
                 "fill-color": chalpal(challenge, colorBy),
-                "fill-opacity": 0.4,
-                "fill-outline-color": "#ffffff22",
+                "fill-opacity": 0.6,
+                "fill-outline-color": "#ffffff10",
               },
-              minzoom: 6,
+              minzoom: 6.0,
             },
             {
               id: "hex_10km",
               type: "fill",
-              "source-layer": "all_10km",
+              "source-layer": "10km",
               source: "hex_10km",
               paint: {
                 "fill-color": chalpal(colorBy),
-                "fill-opacity": 0.4,
-                "fill-outline-color": "#ffffff11",
+                "fill-opacity": 0.6,
+                "fill-outline-color": "#ffffff10",
               },
-              minzoom: 5,
-              maxzoom: 6,
+              minzoom: 5.0,
+              maxzoom: 6.0,
             },
             {
               id: "hex_25km",
               type: "fill",
-              "source-layer": "all_25km",
+              "source-layer": "25km",
               source: "hex_25km",
               paint: {
                 "fill-color": chalpal(colorBy),
-                "fill-opacity": 0.4,
-                "fill-outline-color": "#ffffff11",
+                "fill-opacity": 0.6,
+                "fill-outline-color": "#ffffff10",
               },
               minzoom: 3,
-              maxzoom: 5,
+              maxzoom: 5.0,
             },
             {
               id: "hex_50km",
               type: "fill",
-              "source-layer": "all_50km",
+              "source-layer": "50km",
               source: "hex_50km",
               paint: {
                 "fill-color": chalpal(colorBy),
-                "fill-opacity": 0.4,
-                "fill-outline-color": "#ffffff11",
+                "fill-opacity": 0.6,
+                "fill-outline-color": "#ffffff10",
               },
               maxzoom: 3,
               minzoom: 0,
@@ -215,7 +208,7 @@ export default function Map(props) {
           },
         },
       });
-      map.once('load', () => {
+      map.once("load", () => {
         baseLayers.forEach((source) => {
           if (source.uri !== "") {
             fetch(source.uri)
@@ -235,7 +228,7 @@ export default function Map(props) {
         new maplibregl.NavigationControl({
           showZoom: true,
           showCompass: false,
-        })
+        }),
       );
       map.on("click", (e) => {
         const features = map.queryRenderedFeatures(e.point);
@@ -243,13 +236,40 @@ export default function Map(props) {
 
         ReactDOM.createRoot(container).render(
           <div style={{ textAlign: "center", fontSize: "16px" }}>
-          <>
-            Number of observations<br/><div style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px", color: "#3f5830"}}> {features[0].properties.obsdens}</div>
-          </>
-          <>
-            Number of species<br/><div style={{fontSize: "20px", fontWeight: "bold", paddingTop: "5px", color: "#34426e"}}>{features[0].properties.spdens?features[0].properties.spdens:"0"}</div>
-          </>
-          </div>
+            <>
+              Number of observations
+              <br />
+              <div
+                style={{
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                  paddingTop: "5px",
+                  color: "#3f5830",
+                }}
+              >
+                {" "}
+                {features[0].properties.OBS_total
+                  ? features[0].properties.OBS_total
+                  : "0"}
+              </div>
+            </>
+            <>
+              Number of species
+              <br />
+              <div
+                style={{
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                  paddingTop: "5px",
+                  color: "#34426e",
+                }}
+              >
+                {features[0].properties.SR_total
+                  ? features[0].properties.SR_total
+                  : "0"}
+              </div>
+            </>
+          </div>,
         );
 
         new maplibregl.Popup()
@@ -274,28 +294,30 @@ export default function Map(props) {
 
   useEffect(() => {
     if (mapp) {
-      mapp.setPaintProperty(
-        "hex_5km",
-        "fill-color",
-        chalpal(colorBy)
-      );
-      mapp.setPaintProperty(
-        "hex_10km",
-        "fill-color",
-        chalpal(colorBy)
-      );
-      mapp.setPaintProperty(
-        "hex_25km",
-        "fill-color",
-        chalpal(colorBy)
-      );
-      mapp.setPaintProperty(
-        "hex_50km",
-        "fill-color",
-        chalpal(colorBy)
-      );
+      const updateHexFillColors = () => {
+        if (!mapp || !mapp.isStyleLoaded()) return;
 
-      mapp.triggerRepaint();
+        const colorExpression = chalpal(colorBy);
+        ["hex_5km", "hex_10km", "hex_25km", "hex_50km"].forEach((layerId) => {
+          if (mapp.getLayer(layerId)) {
+            mapp.setPaintProperty(layerId, "fill-color", colorExpression);
+          }
+        });
+
+        mapp.triggerRepaint();
+      };
+
+      if (mapp.isStyleLoaded()) {
+        updateHexFillColors();
+      } else {
+        mapp.once("load", updateHexFillColors);
+        mapp.once("styledata", updateHexFillColors);
+      }
+
+      return () => {
+        mapp.off("load", updateHexFillColors);
+        mapp.off("styledata", updateHexFillColors);
+      };
     }
     return () => {};
   }, [mapp, challenge, colorBy]);
@@ -312,13 +334,7 @@ export default function Map(props) {
     return {
       min: 5,
       max: 500,
-      colors: [
-        "#22301a",
-        "#34426e",
-        "#5a6eae",
-        "#5aa6ed",
-        "#b5d1eb",
-      ],
+      colors: ["#22301a", "#34426e", "#5a6eae", "#5aa6ed", "#b5d1eb"],
     };
   })();
 

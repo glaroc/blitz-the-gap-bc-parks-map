@@ -9,10 +9,10 @@ const { useEffect, useRef } = React;
 
 function App() {
   const [COGUrl, setCOGUrl] = React.useState(
-    "https://object-arbutus.cloud.computecanada.ca/bq-io/io/inat_canada_heatmaps/All_density_inat_100m.tif"
+    "https://object-arbutus.cloud.computecanada.ca/bq-io/io/inat_canada_heatmaps/All_density_inat_100m.tif",
   );
   const [challenge, setChallenge] = useState("All challenges");
-  const [colorBy, setColorBy] = useState("obsdens");
+  const [colorBy, setColorBy] = useState("OBS_total");
   const challenges = [
     { name: "All challenges", everywhere: false },
     { name: "Conservation priorities (MayBAs)", everywhere: false },
