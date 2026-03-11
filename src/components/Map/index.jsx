@@ -235,10 +235,8 @@ export default function Map(props) {
         const container = document.createElement("div");
 
         ReactDOM.createRoot(container).render(
-          <div style={{ textAlign: "center", fontSize: "16px" }}>
+          <div style={{ textAlign: "left", fontSize: "14px" }}>
             <>
-              Number of observations
-              <br />
               <div
                 style={{
                   fontSize: "20px",
@@ -247,26 +245,78 @@ export default function Map(props) {
                   color: "#3f5830",
                 }}
               >
-                {" "}
-                {features[0].properties.OBS_total
-                  ? features[0].properties.OBS_total
-                  : "0"}
+                Number of observations
+              </div>
+              <div>
+                {"Total: "}
+                <strong>
+                  {features[0].properties.OBS_total
+                    ? features[0].properties.OBS_total
+                    : "0"}
+                </strong>
+                <br />
+                {"Species at risk (national designation): "}
+                <strong>
+                  {features[0].properties.OBS_sarN
+                    ? features[0].properties.OBS_sarN
+                    : "0"}
+                </strong>
+                <br />
+                {"Species at risk (BC designation): "}
+                <strong>
+                  {features[0].properties.OBS_sarBC
+                    ? features[0].properties.OBS_sarBC
+                    : "0"}
+                </strong>
+                <br />
+                {"Invasive species: "}
+                <strong>
+                  {features[0].properties.OBS_invasive
+                    ? features[0].properties.OBS_invasive
+                    : "0"}
+                </strong>
               </div>
             </>
             <>
-              Number of species
-              <br />
               <div
                 style={{
                   fontSize: "20px",
                   fontWeight: "bold",
                   paddingTop: "5px",
-                  color: "#34426e",
+                  color: "#5a6eae",
+                  marginTop: "10px",
                 }}
               >
-                {features[0].properties.SR_total
-                  ? features[0].properties.SR_total
-                  : "0"}
+                Number of species
+              </div>
+              <div>
+                {"Total: "}
+                <strong>
+                  {features[0].properties.SR_total
+                    ? features[0].properties.SR_total
+                    : "0"}
+                </strong>
+                <br />
+                {"Species at risk (national designation): "}
+                <strong>
+                  {features[0].properties.SR_sarN
+                    ? features[0].properties.SR_sarN
+                    : "0"}
+                </strong>
+                <br />
+                {"Species at risk (BC designation): "}
+                <strong>
+                  {features[0].properties.SR_sarBC
+                    ? features[0].properties.SR_sarBC
+                    : "0"}
+                </strong>
+                <br />
+                {"Invasive species: "}
+                <strong>
+                  {features[0].properties.SR_invasive
+                    ? features[0].properties.SR_invasive
+                    : "0"}
+                </strong>
               </div>
             </>
           </div>,
