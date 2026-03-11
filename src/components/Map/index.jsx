@@ -16,19 +16,20 @@ export default function Map(props) {
   const [mapp, setMapp] = useState(null);
   const greenpal = [
     { value: 0, color: "#22301a11" },
-    { value: 10, color: "#22301a" },
+    { value: 1, color: "#22301a" },
+    { value: 10, color: "#2f4125" },
     { value: 50, color: "#3f5830" },
     { value: 100, color: "#54793e" },
     { value: 500, color: "#98cd79" },
-    { value: 2500, color: "#cce7bd" },
+    { value: 2500, color: "#e4f0de" },
   ];
   const bluepal = [
-    { value: 0, color: "#22301a11" },
-    { value: 5, color: "#22301a" },
+    { value: 0, color: "#18224611" },
+    { value: 1, color: "#182246" },
     { value: 10, color: "#34426e" },
     { value: 50, color: "#5a6eae" },
     { value: 200, color: "#5aa6ed" },
-    { value: 500, color: "#b5d1eb" },
+    { value: 400, color: "#c5d8eb" },
   ];
   const mapRef = useRef();
   const [valueColors, setValueColors] = useState(greenpal);
@@ -143,10 +144,10 @@ export default function Map(props) {
               source: "hex_5km",
               paint: {
                 "fill-color": chalpal(challenge, colorBy),
-                "fill-opacity": 0.6,
+                "fill-opacity": 0.7,
                 "fill-outline-color": "#ffffff10",
               },
-              minzoom: 6.0,
+              minzoom: 6.00001,
             },
             {
               id: "hex_10km",
@@ -155,10 +156,10 @@ export default function Map(props) {
               source: "hex_10km",
               paint: {
                 "fill-color": chalpal(colorBy),
-                "fill-opacity": 0.6,
+                "fill-opacity": 0.7,
                 "fill-outline-color": "#ffffff10",
               },
-              minzoom: 5.0,
+              minzoom: 5.00001,
               maxzoom: 6.0,
             },
             {
@@ -168,10 +169,10 @@ export default function Map(props) {
               source: "hex_25km",
               paint: {
                 "fill-color": chalpal(colorBy),
-                "fill-opacity": 0.6,
+                "fill-opacity": 0.7,
                 "fill-outline-color": "#ffffff10",
               },
-              minzoom: 3,
+              minzoom: 3.00001,
               maxzoom: 5.0,
             },
             {
@@ -181,7 +182,7 @@ export default function Map(props) {
               source: "hex_50km",
               paint: {
                 "fill-color": chalpal(colorBy),
-                "fill-opacity": 0.6,
+                "fill-opacity": 0.7,
                 "fill-outline-color": "#ffffff10",
               },
               maxzoom: 3,
