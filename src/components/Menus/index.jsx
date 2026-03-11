@@ -88,7 +88,7 @@ export default function Menus(props) {
         </FormControl>
       </FormControl>
       <FormControl variant="standard" sx={{ m: 1, minWidth: 280 }}>
-        <FormControl sx={{ marginTop: "5px" }}>
+        <FormControl sx={{ marginTop: "0px" }}>
           <FormLabel id="row-radio-buttons-group-label">
             For which species?
           </FormLabel>
