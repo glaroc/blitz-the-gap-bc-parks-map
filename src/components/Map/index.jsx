@@ -16,6 +16,7 @@ export default function Map(props) {
 
   const [mapp, setMapp] = useState(null);
   const greenpal = [
+    { value: 0, color: "#22301a11" },
     { value: 10, color: "#22301a" },
     { value: 50, color: "#3f5830" },
     { value: 100, color: "#54793e" },
@@ -23,6 +24,7 @@ export default function Map(props) {
     { value: 2500, color: "#cce7bd" },
   ];
   const bluepal = [
+    { value: 0, color: "#22301a11" },
     { value: 5, color: "#22301a" },
     { value: 10, color: "#34426e" },
     { value: 50, color: "#5a6eae" },
