@@ -53,14 +53,21 @@ export default function Menus(props) {
       </div>
       <div
         style={{
-          width: "300px",
+          fontSize: "24px",
+          fontWeight: "bold",
+          paddingTop: "5px",
+          color: "#5a6eae",
+          marginTop: "10px",
+          /*width: "300px",
           height: "200px",
           background: "url('/blitz-the-gap-bc-parks-map/logo.png') no-repeat",
           marginBottom: "10px",
           backgroundPosition: "center center",
-          backgroundSize: "contain",
+          backgroundSize: "contain",*/
         }}
-      ></div>
+      >
+        BC Biodiversity Program
+      </div>
       <FormControl variant="standard" sx={{ m: 1, minWidth: 280 }}>
         <FormControl sx={{ marginTop: "15px" }}>
           <FormLabel id="row-radio-buttons-group-label">Color by:</FormLabel>
