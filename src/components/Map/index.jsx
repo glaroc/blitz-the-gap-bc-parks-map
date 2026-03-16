@@ -9,6 +9,7 @@ import BaseLegend from "./BaseLegend";
 import { MapLibreStyleSwitcherControl } from "./styleswitcher";
 import { baseLayers } from "./mapStyle";
 import "./map.css";
+import { orange } from "@mui/material/colors";
 
 export default function Map(props) {
   const { COGUrl, opacity, challenges, challenge, colorBy } = props;
@@ -31,6 +32,15 @@ export default function Map(props) {
     { value: 200, color: "#5aa6ed" },
     { value: 400, color: "#c5d8eb" },
   ];
+
+  const orangepal = [
+    { value: 0, color: "#46210f11" },
+    { value: 1, color: "#46210f" },
+    { value: 50, color: "#6e3217" },
+    { value: 100, color: "#9c4b1f" },
+    { value: 500, color: "#d66e2f" },
+    { value: 2500, color: "#f3e1d9" },
+  ];
   const mapRef = useRef();
   const [valueColors, setValueColors] = useState(greenpal);
   //const colormap = encodeURIComponent(JSON.stringify(amfhot));
@@ -48,21 +58,23 @@ export default function Map(props) {
 
   const chalpal = (colorBy) => {
     if (colorBy.includes("OBS")) {
-      setValueColors(greenpal);
+      setValueColors(orangepal);
       return [
         "interpolate",
         ["linear"],
         ["to-number", ["get", colorBy]],
-        greenpal[0].value,
-        greenpal[0].color,
-        greenpal[1].value,
-        greenpal[1].color,
-        greenpal[2].value,
-        greenpal[2].color,
-        greenpal[3].value,
-        greenpal[3].color,
-        greenpal[4].value,
-        greenpal[4].color,
+        orangepal[0].value,
+        orangepal[0].color,
+        orangepal[1].value,
+        orangepal[1].color,
+        orangepal[2].value,
+        orangepal[2].color,
+        orangepal[3].value,
+        orangepal[3].color,
+        orangepal[4].value,
+        orangepal[4].color,
+        orangepal[5].value,
+        orangepal[5].color,
       ];
     } else {
       setValueColors(bluepal);
@@ -80,6 +92,8 @@ export default function Map(props) {
         bluepal[3].color,
         bluepal[4].value,
         bluepal[4].color,
+        bluepal[5].value,
+        bluepal[5].color,
       ];
     }
   };
@@ -217,7 +231,7 @@ export default function Map(props) {
               .then((res) => res.json())
               .then((sty) => {
                 Object.entries(sty.sources).forEach(([sourceId, sourceDef]) => {
-                  if (map && !map.getSource(sourceId)) {
+                  if (map) {
                     map.addSource(sourceId, sourceDef);
                   }
                 });
@@ -373,22 +387,6 @@ export default function Map(props) {
     }
     return () => {};
   }, [mapp, challenge, colorBy]);
-
-  // determine legend params based on colorBy
-  const legendParams = (() => {
-    if (colorBy === "obsdens") {
-      return {
-        min: 10,
-        max: 2500,
-        colors: ["#22301a", "#3f5830", "#54793e", "#98cd79", "#cce7bd"],
-      };
-    }
-    return {
-      min: 5,
-      max: 500,
-      colors: ["#22301a", "#34426e", "#5a6eae", "#5aa6ed", "#b5d1eb"],
-    };
-  })();
 
   return (
     <div
